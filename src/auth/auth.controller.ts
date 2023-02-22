@@ -4,15 +4,15 @@ import { AuthService } from './auth.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) {} //ін'єкція сервісу з логікою
 
-  @Post('/login')
-  login(@Body() userDto: CreateUserDto) {
-    return this.authService.login(userDto);
+  @Post('/login') //метод запиту
+  login(@Body() userDto: CreateUserDto) { //@Body - декоратор який надає доступ до тіла запиту
+    return this.authService.login(userDto); //this - звернення до контроллера
   }
 
   @Post('/registration')
-  registration(@Body() userDto: CreateUserDto) {
-    return this.authService.registration(userDto);
+  registration(@Body() userDto: CreateUserDto) {//@Body - декоратор який надає доступ до тіла запиту
+    return this.authService.registration(userDto); //this - звернення до контроллера
   }
 }

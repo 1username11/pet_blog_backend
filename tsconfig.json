@@ -1,21 +1,21 @@
 {
   "compilerOptions": {
-    "module": "CommonJS",
-    "declaration": true,
-    "removeComments": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true,
-    "target": "es2017",
-    "sourceMap": true,
-    "outDir": "./dist",
+    "module": "CommonJS", //Модульна система яку буде використовувати зібранний код
+    "declaration": true, //геренує файли-аннотації формату d.ts в яких міститься інформація по типах 
+    "removeComments": true, //видаляє комменти
+    "emitDecoratorMetadata": true, //надає декораторам доступ до додаткових метаданних
+    "experimentalDecorators": true, //активує синтаксис оголошення декораторів через собачку
+    "allowSyntheticDefaultImports": true, //дозволяє імпортувати commonjs пакети як ES6
+    "target": "ES2017", //Весрсія ECMAScript в яку буде скомпільовано код
+    "sourceMap": true, //генерація sourcemap файлів, дозволяє дебагеру і іншим інструментам працювати з вхідним тайскріпт кодом
+    "outDir": "./dist", //папка в яку буде скомпільвано файли
     "baseUrl": "./",
-    "incremental": true,
-    "skipLibCheck": true,
-    "strictNullChecks": false,
-    "noImplicitAny": false,
-    "strictBindCallApply": false,
-    "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "incremental": true, //генерація tsbuildinfo файлу в якому зберігаються про project graph
+    "skipLibCheck": true, // пропускає перевірку типів d.ts
+    "strictNullChecks": false, // null і undefined - не відрізняються при фолс
+    "noImplicitAny": false, //присвоює тип any якщо відсутня анотація типів
+    "strictBindCallApply": false, //перевірка методів BindCallApply на строгість типів
+    "forceConsistentCasingInFileNames": false, //вмикає чутливість до регістру при імпортах
+    "noFallthroughCasesInSwitch": false, //видає помилку у випадку пропусків у операторі switch
   }
 }

@@ -17,14 +17,14 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  private async validateUser(createUserDto: CreateUserDto) {
+  private async validateUser(createUserDto: CreateUserDto) { //валідація юзера (перевірка пароля)
     const user = await this.userService.getUserByEmail(createUserDto.email);
-    const passwordEqual = await bcrypt.compare(
+    const passwordEqual = await bcrypt.compare( //порівняння двох хешів на співпадіння
       createUserDto.password,
       user.password,
     );
     if (passwordEqual && user) {
-      return user;
+      return user; 
     } else {
       throw new UnauthorizedException({
         message: 'email or password is incorrect',
@@ -33,32 +33,32 @@ export class AuthService {
   }
 
   async login(createUserDto: CreateUserDto) {
-    const user = await this.validateUser(createUserDto);
-    return this.generateToken(user);
+    const user = await this.validateUser(createUserDto); //якщо користувач існує і пароль вірний то в змінну прийде користуач
+    return this.generateToken(user); //і з цього користувача ми згенеруємо токен
   }
 
   async registration(createUserDto: CreateUserDto) {
-    const candidate = await this.userService.getUserByEmail(
+    const candidate = await this.userService.getUserByEmail( 
       createUserDto.email,
     );
-    if (candidate) {
+    if (candidate) { //перевірка юзера на унікальність за email
       throw new HttpException('user is alredy exist', HttpStatus.BAD_REQUEST);
     } else {
-      const hashPassword = await bcrypt.hash(createUserDto.password, 10);
+      const hashPassword = await bcrypt.hash(createUserDto.password, 10); //хешування парлю (перший параметр це даніб другий це сіль)
       const user = await this.userService.createUser({
         ...createUserDto,
         password: hashPassword,
-      });
-      return this.generateToken(user);
+      }); // створення безпечного юзера з захешованим паролем
+      return this.generateToken(user); //повертаємо токен користвуча на клієнт
     }
   }
   async generateToken(user: User) {
-    const payload = {
+    const payload = { //змінна з якої буде створено токен
       email: user.email,
       id: user.id,
     };
     return {
-      token: this.jwtService.sign(payload),
+      token: this.jwtService.sign(payload), // генерація токену
     };
   }
 }

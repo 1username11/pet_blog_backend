@@ -1,19 +1,27 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { config } from 'dotenv';
 
-config();
-const { DB_PORT, HOST, USER, DB_NAME, PASSWORD } = process.env;
+config();//виклик функції присвоює змінній process.env значення з файлу .env
+export const {
+  POSTGRES_HOST,
+  POSTGRES_USER,
+  POSTGRES_DB,
+  POSTGRES_PASSWORD,
+  POSTGRES_PORT,
+  JWTSECRET,
+  OPEN_API_KEY
+} = process.env; //деструктуризація process.env
 
 export const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',
-  host: HOST,
-  username: USER,
-  port: +DB_PORT,
-  password: PASSWORD,
-  database: DB_NAME,
+  host: POSTGRES_HOST,
+  username: POSTGRES_USER,
+  port: +POSTGRES_PORT,
+  password: POSTGRES_PASSWORD,
+  database: POSTGRES_DB,
   migrations: ['dist/migrations/*.js'],
   entities: ['dist/**/*.entity.js'],
-  synchronize: true,
-};
+  synchronize: false,
+}; //  DataSourceOptions - змінна з налаштуваннями для екзмпляру классу DataSource
 
 export const dataSource = new DataSource(dataSourceOptions);
