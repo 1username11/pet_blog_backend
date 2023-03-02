@@ -6,6 +6,10 @@ import { PostModule } from './post/post.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { dataSourceOptions } from './db/data-source';
 import { AuthModule } from './auth/auth.module';
+import { FilesModule } from './files/files.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import * as path from 'path';
+
 
 
 
@@ -14,7 +18,10 @@ import { AuthModule } from './auth/auth.module';
     UserModule,
     PostModule,
     TypeOrmModule.forRoot(dataSourceOptions), // створює модуль який відповідає за підключення до БД з використанням dataSourceOptions
-    AuthModule,
+    AuthModule, FilesModule,
+    ServeStaticModule.forRoot({
+      rootPath: path.resolve('./src/static'),
+    }),
   ], // імпорт "другорядних модулів" в головний модуль
   controllers: [AppController], //реєстрація контроллерів які використовуються в модулі
   providers: [AppService], //реєстрація провайдерів які використовуються в рамках цього модуля (в контроллерах)

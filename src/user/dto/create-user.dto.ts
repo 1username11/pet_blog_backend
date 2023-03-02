@@ -12,9 +12,7 @@ export class CreateUserDto { // Data Transfer Object - об'єкт який ви
   })
   username: string;
 
-  @IsEmail({
-    message: 'incorrect email',
-  })
+  @IsEmail()
   email: string;
 
   @IsString()

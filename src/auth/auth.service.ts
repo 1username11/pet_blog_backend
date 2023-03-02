@@ -17,48 +17,82 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  private async validateUser(createUserDto: CreateUserDto) { //валідація юзера (перевірка пароля)
-    const user = await this.userService.getUserByEmail(createUserDto.email);
-    const passwordEqual = await bcrypt.compare( //порівняння двох хешів на співпадіння
-      createUserDto.password,
-      user.password,
-    );
-    if (passwordEqual && user) {
-      return user; 
-    } else {
-      throw new UnauthorizedException({
-        message: 'email or password is incorrect',
-      });
+  private async validateUser(createUserDto: CreateUserDto) {
+    try {
+      // Отримуємо юзера з бази даних за електронною поштою
+      const user = await this.userService.getUserByEmail(createUserDto.email);
+  
+      // Порівнюємо пароль, який отримали з даними з бази даних
+      const passwordEqual = await bcrypt.compare(
+        createUserDto.password,
+        user.password,
+      );
+  
+      // Якщо пароль збігається і юзер існує, повертаємо об'єкт юзера
+      if (passwordEqual && user) {
+        return user;
+      } else {
+        // Якщо пароль не збігається, кидаємо виключення з помилкою
+        throw new UnauthorizedException({
+          message: 'Email або пароль введено неправильно',
+        });
+      }
+    } catch (err) {
+      // Якщо виникає помилка, кидаємо виключення з помилкою
+      throw new HttpException('Помилка валідації юзера', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+  
 
   async login(createUserDto: CreateUserDto) {
-    const user = await this.validateUser(createUserDto); //якщо користувач існує і пароль вірний то в змінну прийде користуач
-    return this.generateToken(user); //і з цього користувача ми згенеруємо токен
+    try {
+      const user = await this.validateUser(createUserDto); // Валідація користувача
+      const token = await this.generateToken(user); // Генерація токену
+      return token; // Повернення токену
+    } catch (error) {
+      throw new UnauthorizedException('email or password is incorrect'); // Обробка помилок
+    }
   }
+  
 
   async registration(createUserDto: CreateUserDto) {
-    const candidate = await this.userService.getUserByEmail( 
-      createUserDto.email,
-    );
-    if (candidate) { //перевірка юзера на унікальність за email
-      throw new HttpException('user is alredy exist', HttpStatus.BAD_REQUEST);
-    } else {
-      const hashPassword = await bcrypt.hash(createUserDto.password, 10); //хешування парлю (перший параметр це даніб другий це сіль)
+    try {
+      const candidate = await this.userService.getUserByEmail(createUserDto.email);
+      if (candidate) { // перевірка, чи існує користувач з вказаною електронною адресою
+        throw new HttpException('Користувач з такою електронною адресою вже існує', HttpStatus.BAD_REQUEST);
+      }
+  
+      // хешування паролю
+      const hashPassword = await bcrypt.hash(createUserDto.password, 10);
+  
+      // створення користувача
       const user = await this.userService.createUser({
         ...createUserDto,
         password: hashPassword,
-      }); // створення безпечного юзера з захешованим паролем
-      return this.generateToken(user); //повертаємо токен користвуча на клієнт
+      });
+  
+      // генерація токену
+      const token = await this.generateToken(user);
+  
+      // повернення результату
+      return token;
+    } catch (error) {
+      console.log(error)
+      throw new HttpException('Не вдалося зареєструвати користувача', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+  
+
   async generateToken(user: User) {
-    const payload = { //змінна з якої буде створено токен
-      email: user.email,
-      id: user.id,
-    };
-    return {
-      token: this.jwtService.sign(payload), // генерація токену
-    };
+    try {
+      const payload = { // дані, з яких буде створено токен
+        id: user.id,
+      };
+      const token = this.jwtService.sign(payload); // генерація токену з payload
+      return { token: token }; // повернення об'єкту з токеном
+    } catch (error) { // обробка виключень
+      throw new HttpException('Error generating token', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
+  
 }
