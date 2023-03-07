@@ -6,10 +6,12 @@ import * as uuid from 'uuid'
 @Injectable()
 export class FilesService {
 
-  async createFile(file): Promise<string> {
+  async createFile(file: Express.Multer.File): Promise<string> {
     try {
+      const { originalname } = file;
+      const extension = originalname.split('.').pop();
       // Генеруємо унікальне ім'я для файлу
-      const fileName = uuid.v4() + '.jpg';
+      const fileName = uuid.v4() + '.' + extension;
 
       // Визначаємо шлях до директорії, де зберігатимуться файли
       const filePath = path.resolve('./src/static');

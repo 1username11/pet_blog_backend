@@ -9,10 +9,11 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { UserModule } from 'src/user/user.module';
 import { JwtModule } from '@nestjs/jwt';
 import { FilesModule } from 'src/files/files.module';
+import { ImageValidationPipe } from './image-validation.pipe';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Post, User]), AuthModule, UserModule, JwtModule, FilesModule],
   controllers: [PostController],
-  providers: [PostService, JwtAuthGuard],
+  providers: [PostService, JwtAuthGuard, ImageValidationPipe],
 })
 export class PostModule {}

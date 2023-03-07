@@ -17,5 +17,6 @@ export class CreatePostDto {
   @IsString()
   tags: string;
 
+  
   image: any
 }
