@@ -1,11 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import * as fs from 'fs'
-import * as path from 'path'
-import * as uuid from 'uuid'
+import * as fs from 'fs';
+import * as path from 'path';
+import * as uuid from 'uuid';
 
 @Injectable()
 export class FilesService {
-
   async createFile(file: Express.Multer.File): Promise<string> {
     try {
       const { originalname } = file;

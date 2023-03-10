@@ -30,9 +30,8 @@ export class Post {
   updatedAt: Date;
 
   @Column()
-  image: string
-  
-  
+  image: string;
+
   @ManyToOne(() => User, (user) => user.posts)
   @JoinColumn()
   user: User;

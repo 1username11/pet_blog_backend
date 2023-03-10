@@ -12,7 +12,13 @@ import { FilesModule } from 'src/files/files.module';
 import { ImageValidationPipe } from './image-validation.pipe';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Post, User]), AuthModule, UserModule, JwtModule, FilesModule],
+  imports: [
+    TypeOrmModule.forFeature([Post, User]),
+    AuthModule,
+    UserModule,
+    JwtModule,
+    FilesModule,
+  ],
   controllers: [PostController],
   providers: [PostService, JwtAuthGuard, ImageValidationPipe],
 })

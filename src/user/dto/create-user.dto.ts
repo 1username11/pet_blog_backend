@@ -6,7 +6,8 @@ import {
   MinLength,
 } from 'class-validator';
 
-export class CreateUserDto { // Data Transfer Object - об'єкт який визнає схему даних яі будуть відправлятись через запит
+export class CreateUserDto {
+  // Data Transfer Object - об'єкт який визнає схему даних яі будуть відправлятись через запит
   @IsNotEmpty({
     message: 'Username is required',
   })

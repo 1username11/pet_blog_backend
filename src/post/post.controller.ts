@@ -12,6 +12,9 @@ import {
   UseInterceptors,
   UsePipes,
   ParseIntPipe,
+  Res,
+  Query,
+  Req,
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -20,7 +23,6 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ImageValidationPipe } from './image-validation.pipe';
 
-
 @Controller('post')
 export class PostController {
   constructor(private readonly postService: PostService) {}
@@ -28,8 +30,16 @@ export class PostController {
   @Post()
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('image'))
-  async createPost(@Request() req, @Body() createPostDto: CreatePostDto, @UploadedFile(new ImageValidationPipe()) image) {
-    const post = await this.postService.create(req.user.id, createPostDto, image);
+  async createPost(
+    @Request() req,
+    @Body() createPostDto: CreatePostDto,
+    @UploadedFile(new ImageValidationPipe()) image,
+  ) {
+    const post = await this.postService.create(
+      req.user.id,
+      createPostDto,
+      image,
+    );
     return post;
   }
 
@@ -41,22 +51,24 @@ export class PostController {
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  delete(@Param('id', ParseIntPipe) id: number) {
-    return this.postService.delete(id);
+  delete(@Param('id', ParseIntPipe) id: number, @Req() req) {
+    return this.postService.delete(id, req);
   }
 
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() updatePostDto: UpdatePostDto) {
-    return this.postService.updatePost(id, updatePostDto);
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updatePostDto: UpdatePostDto,
+    @Req() req,
+  ) {
+    return this.postService.updatePost(id, updatePostDto, req);
   }
 
-  // @UseGuards(JwtAuthGuard)
-  // @Get('/search')
-  // async findByTags(@Param('tags') tags: string) {
-  //   const tagsArray = tags.split('%20')
-  //   const posts = await this.postService.findByTags(tagsArray);
-  //   return posts;
-  // }
-
+  @UseGuards(JwtAuthGuard)
+  @Post('search')
+  async findAllByTags(@Query('tags') tags: string) {
+    const posts = await this.postService.findAllByTags(tags);
+    return posts;
+  }
 }
