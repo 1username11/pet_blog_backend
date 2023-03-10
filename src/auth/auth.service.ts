@@ -58,20 +58,19 @@ export class AuthService {
       if (!candidate) {
         // хешування паролю
         const hashPassword = await bcrypt.hash(createUserDto.password, 10);
-  
+
         // створення користувача
         const user = await this.userService.createUser({
           ...createUserDto,
           password: hashPassword,
         });
-  
+
         // генерація токену
         const token = await this.generateToken(user);
-  
+
         // повернення результату
         return token;
       }
-
     } catch (error) {
       console.log(error);
       throw new HttpException(
@@ -80,13 +79,13 @@ export class AuthService {
       );
     }
   }
-  async registrationWithQueryBuilder (createUserDto: CreateUserDto){
+  async registrationWithQueryBuilder(createUserDto: CreateUserDto) {
     try {
-      const user = await this.userService.insertUser(createUserDto)
-      const token = await this.generateToken(user)
-      return token
+      const user = await this.userService.insertUser(createUserDto);
+      const token = await this.generateToken(user);
+      return token;
     } catch (error) {
-      throw new HttpException("registration failed", HttpStatus.BAD_REQUEST)
+      throw new HttpException('registration failed', HttpStatus.BAD_REQUEST);
     }
   }
   // async registrationWithTransaction(createUserDto: CreateUserDto) {

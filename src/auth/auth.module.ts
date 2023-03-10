@@ -10,7 +10,7 @@ import { AuthService } from './auth.service';
   controllers: [AuthController], //реєстрація контроллера
   providers: [AuthService], //реєстрація сервісу
   imports: [
-    forwardRef(() => UserModule), //функція яка дозволяє працювати з циклічними залежностями
+  UserModule,
     JwtModule.register({
       //імпорт JWT модуля
       secret: JWTSECRET, //секретний ключ за допомогою якого генерується токен(будь-яка стрінга)

@@ -5,7 +5,6 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
 
-
 @Injectable()
 export class UserService {
   constructor(
@@ -32,20 +31,6 @@ export class UserService {
     }
   }
 
-  async findAll(): Promise<User[]> {
-    try {
-      // Отримати всіх користувачів з бази даних з використанням методу `find` об'єкта `userRepository`
-      const users = await this.userRepository.find();
-
-      // Повернути масив користувачів
-      return users;
-    } catch (error) {
-      // Якщо виникає будь-яка помилка при отриманні користувачів з бази даних, перехоплюємо її та повертаємо нову помилку
-      // з повідомленням про нездатність отримати користувачів з бази даних.
-      throw new Error(`Unable to find users: ${error.message}`);
-    }
-  }
-
   async getUserByEmail(email: string): Promise<User> {
     try {
       // Знайти користувача за електронною адресою з використанням методу `findOne` об'єкта `userRepository`
@@ -57,8 +42,6 @@ export class UserService {
         .getOne();
       return user;
     } catch (error) {
-      // Якщо виникає будь-яка помилка при виконанні запиту до бази даних, перехоплюємо її та повертаємо нову помилку
-      // з повідомленням про нездатність знайти користувача за допомогою даної адреси електронної пошти.
       throw new Error(`Unable to fetch user with email ${email}`);
     }
   }
@@ -80,19 +63,18 @@ export class UserService {
     }
   }
 
-  async insertUser (createUserDto: CreateUserDto){
-    const hashPassword = await bcrypt.hash(createUserDto.password, 10)
+  async insertUser(createUserDto: CreateUserDto) {
+    const hashPassword = await bcrypt.hash(createUserDto.password, 10);
     const user = await this.userRepository.create({
       ...createUserDto,
-      password:hashPassword
-    })
+      password: hashPassword,
+    });
     const queryBuilder = await this.userRepository
       .createQueryBuilder()
       .insert()
       .into(User)
       .values(user)
-      .execute()
-      return user
+      .execute();
+    return user;
   }
-  
 }
