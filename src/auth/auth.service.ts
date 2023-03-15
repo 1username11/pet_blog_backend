@@ -88,27 +88,6 @@ export class AuthService {
       throw new HttpException('registration failed', HttpStatus.BAD_REQUEST);
     }
   }
-  // async registrationWithTransaction(createUserDto: CreateUserDto) {
-  //   const hashPassword = await bcrypt.hash(createUserDto.password, 10);
-  //     const user = await this.userService.createUser({
-  //       ...createUserDto,
-  //       password: hashPassword,
-  //     });
-  //   const queryRunner = await this.dataSource.createQueryRunner()
-  //   //const queryBuilder = await this.dataSource.createQueryBuilder()
-  //   await queryRunner.connect()
-  //   await queryRunner.startTransaction()
-  //   try {
-  //     queryRunner.manager.createQueryBuilder().insert().into("user").values({...user}).execute()
-  //     await queryRunner.commitTransaction()
-  //     const token = this.generateToken(user)
-  //     return token
-  //   } catch (error) {
-  //     await queryRunner.rollbackTransaction()
-  //   }finally{
-  //     await queryRunner.release()
-  //   }
-  // }
 
   async generateToken(user: User) {
     try {
@@ -119,7 +98,6 @@ export class AuthService {
       const token = this.jwtService.sign(payload); // генерація токену з payload
       return { token: token }; // повернення об'єкту з токеном
     } catch (error) {
-      // обробка виключень
       throw new HttpException(
         'Error generating token',
         HttpStatus.INTERNAL_SERVER_ERROR,

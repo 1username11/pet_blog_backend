@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { forwardRef } from '@nestjs/common/utils';
 import { JwtModule } from '@nestjs/jwt';
 import { JWTSECRET } from 'config';
 import { UserModule } from 'src/user/user.module';
@@ -10,7 +9,7 @@ import { AuthService } from './auth.service';
   controllers: [AuthController], //реєстрація контроллера
   providers: [AuthService], //реєстрація сервісу
   imports: [
-  UserModule,
+    UserModule,
     JwtModule.register({
       //імпорт JWT модуля
       secret: JWTSECRET, //секретний ключ за допомогою якого генерується токен(будь-яка стрінга)

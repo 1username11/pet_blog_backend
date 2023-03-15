@@ -5,7 +5,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { EntityManager } from 'typeorm';
+import { EntityManager, ILike } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { DeleteResult, Repository } from 'typeorm';
@@ -51,7 +51,7 @@ export class PostService {
     try {
       const posts = await this.postRepository
         .createQueryBuilder('post')
-        .where('post.tags ILIKE :tags', { tags: `%${tags}%` })
+        .where({ tags: ILike(tags) })
         .getMany();
       return posts;
     } catch (error) {
@@ -82,7 +82,7 @@ export class PostService {
     }
   }
 
-  async delete(id, req: Request): Promise<DeleteResult | string> {
+  async delete(id: number, req: Request): Promise<DeleteResult | string> {
     try {
       const token = req.headers.authorization.split(' ').pop();
       const userId = this.jwtService.verify(token).id;
@@ -96,7 +96,7 @@ export class PostService {
       if (result.affected !== 0) {
         return result;
       } else {
-        return 'неможливо видалити пост';
+        return 'неможливо видалити пост'; //прокинути помилку
       }
     } catch (error) {
       console.log(error);
@@ -108,7 +108,6 @@ export class PostService {
     try {
       const { title, content, tags } = updatePostDto;
       const token = req.headers.authorization.split(' ').pop();
-
       const userId = this.jwtService.verify(token).id;
       const result = await this.postRepository
         .createQueryBuilder('post')

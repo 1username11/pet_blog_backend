@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { PostModule } from './post/post.module';
 import { AuthModule } from './auth/auth.module';
@@ -22,8 +20,6 @@ import * as path from 'path';
     }),
     DatabaseModule,
   ], // імпорт "другорядних модулів" в головний модуль
-  controllers: [AppController], //реєстрація контроллерів які використовуються в модулі
-  providers: [AppService], //реєстрація провайдерів які використовуються в рамках цього модуля (в контроллерах)
 })
 export class AppModule {} //екпорт модуля який в подальшому імпортується в мейн файл
 //Граф залежностей - це граф в якому відображено структуру залежностей в застосунку
