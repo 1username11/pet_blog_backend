@@ -52,7 +52,7 @@ export class PostController {
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
   delete(@Param('id', ParseIntPipe) id: number, @Req() req) {
-    return this.postService.delete(id, req);
+    return this.postService.delete(id, req.user.id);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -62,7 +62,7 @@ export class PostController {
     @Body() updatePostDto: UpdatePostDto,
     @Req() req,
   ) {
-    return this.postService.updatePost(id, updatePostDto, req);
+    return this.postService.updatePost(id, updatePostDto, req.user.id);
   }
 
   @UseGuards(JwtAuthGuard)

@@ -74,8 +74,6 @@ export class UserService {
       .insert()
       .into(User)
       .values(user)
-      .returning("*")
-      .orIgnore(true)
       .execute();
     return user;
   }

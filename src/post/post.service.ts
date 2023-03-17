@@ -82,16 +82,14 @@ export class PostService {
     }
   }
 
-  async delete(id: number, req: Request): Promise<DeleteResult | string> {
+  async delete(id: number, userId): Promise<DeleteResult | string> {
     try {
-      const token = req.headers.authorization.split(' ').pop();
-      const userId = this.jwtService.verify(token).id;
-      const result = await this.postRepository
+        const result = await this.postRepository
         .createQueryBuilder('post')
         .delete()
         .from(Post)
         .where('id = :id', { id })
-        .andWhere('userId = :userId', { userId })
+        .andWhere('userId = :userId', { userId})
         .execute();
       if (result.affected !== 0) {
         return result;
@@ -104,12 +102,10 @@ export class PostService {
     }
   }
 
-  async updatePost(id: number, updatePostDto: UpdatePostDto, req: Request) {
+  async updatePost(id: number, updatePostDto: UpdatePostDto, userId) {
     try {
       const { title, content, tags } = updatePostDto;
-      const token = req.headers.authorization.split(' ').pop();
-      const userId = this.jwtService.verify(token).id;
-      const result = await this.postRepository
+        const result = await this.postRepository
         .createQueryBuilder('post')
         .update(Post)
         .set({
